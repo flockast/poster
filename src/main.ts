@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import { fastify } from 'fastify'
 import autoLoad from '@fastify/autoload'
 import qs from 'qs'
-import { errorHandler } from './presentation/http.errors'
+import { errorHandler } from './presentation/handlers/error.handler'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -42,9 +42,9 @@ export class Server {
     })
   }
 
-  private static async registerRepositories() {
+  private static async registerDecorators() {
     await Server.app.register(autoLoad, {
-      dir: join(__dirname, 'infrastructure/repositories'),
+      dir: join(__dirname, 'infrastructure/decorators'),
       forceESM: true
     })
   }
@@ -88,11 +88,11 @@ export class Server {
     await Server.registerSensible()
     await Server.setErrorHandler()
     await Server.registerPlugins()
-    await Server.registerRepositories()
+    await Server.registerDecorators()
     await Server.registerSwagger()
     await Server.registerRoutes()
     await Server.listenServer()
   }
 }
 
-Server.start()
+await Server.start()

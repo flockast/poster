@@ -6,6 +6,8 @@
     "noEmit": true,
 
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "isolatedModules": true,
