@@ -1,23 +1,25 @@
 import { type DB } from 'kysely-codegen'
+import { Type } from '@sinclair/typebox'
+import { Value } from '@sinclair/typebox/value'
 import { Kysely, PostgresDialect, sql } from 'kysely'
 import fp from 'fastify-plugin'
 import pg from 'pg'
 
-type TypeConfig = {
-  host: string,
-  port: number,
-  user: string,
-  password: string,
-  database: string
-}
+const ConfigSchema = Type.Object({
+  host: Type.String(),
+  port: Type.Number(),
+  user: Type.String(),
+  password: Type.String(),
+  database: Type.String()
+})
 
-const config: TypeConfig = {
+const config = Value.Decode(ConfigSchema, {
   host: `${process.env.POSTGRES_HOST}`,
   port: Number(process.env.POSTGRES_PORT),
   user: `${process.env.POSTGRES_USER}`,
   password: `${process.env.POSTGRES_PASSWORD}`,
   database: `${process.env.POSTGRES_DB}`
-}
+})
 
 declare module 'fastify' {
   interface FastifyInstance {

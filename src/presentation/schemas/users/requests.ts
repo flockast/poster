@@ -8,9 +8,10 @@ export const UserEmail = Type.Object({
   email: Type.String({ format: 'email' })
 })
 
-export const CreateUser = Type.Object({
+export const UpdateUser = Type.Partial(Type.Object({
   email: Type.String(),
-  password: Type.String()
-})
-
-export const UpdateUser = Type.Partial(CreateUser)
+  password: Type.String({
+    minLength: 8,
+    maxLength: 100
+  })
+}))

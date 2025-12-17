@@ -1,4 +1,5 @@
 export type JwtTokenPayload = {
+  id: number
   email: string
 }
 
@@ -8,6 +9,7 @@ export const isJwtTokenPayload = (payload: unknown): payload is JwtTokenPayload 
   }
   const p = payload as Record<string, any>
   return (
+    typeof p.id === 'number' &&
     typeof p.email === 'string' &&
     p.email.length > 0
   )

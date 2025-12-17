@@ -2,6 +2,7 @@ import { UpdateUser, User } from '@/domain/entities/user.entity'
 import { UserRepositoryPort } from '@/domain/ports/user.port'
 import { PasswordRepositoryPort } from '@/domain/ports/password.port'
 import { AppErrorNotFound, AppErrorAlreadyExisting } from '../commons/exceptions'
+import { normalizeEmail } from '../commons/normalize-email'
 
 type UpdateUserPayload = Partial<{
   email: string
@@ -29,7 +30,7 @@ export class UserUseCase {
   }
 
   async findByEmail(payload: User['email']) {
-    const user = await this.userRepository.findByEmail(payload)
+    const user = await this.userRepository.findByEmail(normalizeEmail(payload))
 
     if (!user) {
       throw new AppErrorNotFound(`Пользователь email=${payload} не найден`)
@@ -39,23 +40,24 @@ export class UserUseCase {
   }
 
   async update(id: User['id'], payload: UpdateUserPayload) {
+    const updateUserPayload: UpdateUser = {}
+
     if (payload.email) {
-      const existing = await this.userRepository.findByEmail(payload.email)
+      const normalizedEmail = normalizeEmail(payload.email)
+      const existing = await this.userRepository.findByEmail(normalizedEmail)
 
       if (existing && existing.id !== id) {
-        throw new AppErrorAlreadyExisting(`Пользователь с таким email (${payload.email}) уже существует`)
+        throw new AppErrorAlreadyExisting(`Пользователь с таким email (${normalizedEmail}) уже существует`)
       }
-    }
 
-    const updateData: UpdateUser = {
-      email: payload.email
+      updateUserPayload.email = normalizedEmail
     }
 
     if (payload.password) {
-      updateData.passwordHash = await this.passwordRepository.hash(payload.password)
+      updateUserPayload.passwordHash = await this.passwordRepository.hash(payload.password)
     }
 
-    const user = await this.userRepository.update(id, updateData)
+    const user = await this.userRepository.update(id, updateUserPayload)
 
     if (!user) {
       throw new AppErrorNotFound(`Пользователь с id=${id} не найден`)

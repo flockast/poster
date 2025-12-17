@@ -17,7 +17,7 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
   })
 
   app.post<{
-    Body: Static<typeof Auth.Requests.SignUp>
+    Body: Static<typeof Auth.Requests.SignIn>
   }>('/signin', {
     schema: {
       body: Auth.Requests.SignIn,
