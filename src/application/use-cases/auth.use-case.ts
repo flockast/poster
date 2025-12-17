@@ -1,7 +1,7 @@
 import { UserRepositoryPort } from '@/domain/ports/user.port'
 import { JwtRepositoryPort } from '@/domain/ports/jwt.port'
 import { PasswordRepositoryPort } from '@/domain/ports/password.port'
-import { ExceptionAlreadyExisting, ExceptionInvalidLogin, ExceptionNotFound } from '../commons/exceptions'
+import { AppErrorNotFound, AppErrorAlreadyExisting, AppErrorInvalidLogin } from '../commons/exceptions'
 
 type SignUpPayload = {
   email: string
@@ -24,7 +24,7 @@ export class AuthUseCase {
     const existingUser = await this.userRepository.findByEmail(payload.email)
 
     if (existingUser) {
-      throw new ExceptionAlreadyExisting(`Пользователь с таким email (${payload.email}) уже существует`)
+      throw new AppErrorAlreadyExisting(`Пользователь с таким email (${payload.email}) уже существует`)
     }
 
     const payloadCreateUser = {
@@ -45,13 +45,13 @@ export class AuthUseCase {
     const user = await this.userRepository.findByEmail(payload.email)
 
     if (!user) {
-      throw new ExceptionInvalidLogin()
+      throw new AppErrorInvalidLogin()
     }
 
     const verifiedPassword = await this.passwordRepository.verify(payload.password, user?.passwordHash)
 
     if (!verifiedPassword) {
-      throw new ExceptionInvalidLogin()
+      throw new AppErrorInvalidLogin()
     }
 
     const token = await this.jwtRepository.sign({ email: user.email })
@@ -66,7 +66,7 @@ export class AuthUseCase {
     const user = await this.userRepository.findByEmail(payload.email)
 
     if (!user) {
-      throw new ExceptionNotFound(`Пользователь email=${payload.email} не найден`)
+      throw new AppErrorNotFound(`Пользователь email=${payload.email} не найден`)
     }
 
     return user

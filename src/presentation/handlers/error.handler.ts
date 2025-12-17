@@ -1,34 +1,36 @@
+import { AppError } from '@/application/commons/exceptions'
 import { type FastifyInstance } from 'fastify'
-import { ExceptionNotFound, ExceptionAlreadyExisting, ExceptionUnauthorized, ExceptionInvalidLogin } from '@/application/commons/exceptions'
 
 export const errorHandler: FastifyInstance['errorHandler'] = (error, request, reply) => {
-  if (error instanceof ExceptionNotFound) {
-    return reply.notFound(error.message)
+  if (!(error instanceof AppError)) {
+    reply.log.error({
+      request: {
+        method: request.method,
+        url: request.url,
+        headers: request.headers,
+        body: request.body,
+        query: request.query,
+        params: request.params
+      },
+      error
+    })
+
+    reply.status(500).send({
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Внутренняя ошибка сервера',
+        timestamp: new Date().toISOString()
+      }
+    })
+    return
   }
 
-  if (error instanceof ExceptionAlreadyExisting) {
-    return reply.unprocessableEntity(error.message)
-  }
-
-  if (error instanceof ExceptionUnauthorized) {
-    return reply.unauthorized(error.message)
-  }
-
-  if (error instanceof ExceptionInvalidLogin) {
-    return reply.unauthorized(error.message)
-  }
-
-  reply.log.error({
-    request: {
-      method: request.method,
-      url: request.url,
-      headers: request.headers,
-      body: request.body,
-      query: request.query,
-      params: request.params
-    },
-    error
+  reply.status(error.statusCode).send({
+    error: {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+      timestamp: new Date().toISOString()
+    }
   })
-
-  reply.send(error)
 }

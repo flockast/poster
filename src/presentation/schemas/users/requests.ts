@@ -5,7 +5,7 @@ export const UserId = Type.Object({
 })
 
 export const UserEmail = Type.Object({
-  email: Type.String()
+  email: Type.String({ format: 'email' })
 })
 
 export const CreateUser = Type.Object({

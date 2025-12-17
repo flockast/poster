@@ -3,8 +3,16 @@ import { isJwtTokenPayload, type JwtTokenPayload } from '@/domain/entities/jwt.e
 import { JwtRepositoryPort } from '@/domain/ports/jwt.port'
 
 export class JwtRepository implements JwtRepositoryPort {
+  constructor () {
+    if (!process.env.JWT_SECRET) {
+      throw new Error('JWT_SECRET не установлен')
+    }
+  }
+
   async sign(payload: JwtTokenPayload) {
-    return jwt.sign(payload, process.env.JWT_SECRET!)
+    return jwt.sign(payload, process.env.JWT_SECRET!, {
+      expiresIn: '24h'
+    })
   }
 
   async verify(token: string) {

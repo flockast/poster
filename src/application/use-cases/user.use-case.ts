@@ -1,9 +1,18 @@
-import { CreateUser, UpdateUser, User } from '@/domain/entities/user.entity'
+import { UpdateUser, User } from '@/domain/entities/user.entity'
 import { UserRepositoryPort } from '@/domain/ports/user.port'
-import { ExceptionAlreadyExisting, ExceptionNotFound } from '../commons/exceptions'
+import { PasswordRepositoryPort } from '@/domain/ports/password.port'
+import { AppErrorNotFound, AppErrorAlreadyExisting } from '../commons/exceptions'
+
+type UpdateUserPayload = Partial<{
+  email: string
+  password: string
+}>
 
 export class UserUseCase {
-  constructor (private readonly userRepository: UserRepositoryPort) {}
+  constructor (
+    private readonly userRepository: UserRepositoryPort,
+    private readonly passwordRepository: PasswordRepositoryPort
+  ) {}
 
   findAll() {
     return this.userRepository.findAll()
@@ -13,7 +22,7 @@ export class UserUseCase {
     const user = await this.userRepository.findById(payload)
 
     if (!user) {
-      throw new ExceptionNotFound(`Пользователь id=${payload} не найден`)
+      throw new AppErrorNotFound(`Пользователь id=${payload} не найден`)
     }
 
     return user
@@ -23,25 +32,33 @@ export class UserUseCase {
     const user = await this.userRepository.findByEmail(payload)
 
     if (!user) {
-      throw new ExceptionNotFound(`Пользователь email=${payload} не найден`)
+      throw new AppErrorNotFound(`Пользователь email=${payload} не найден`)
     }
 
     return user
   }
 
-  async update(id: User['id'], payload: UpdateUser) {
+  async update(id: User['id'], payload: UpdateUserPayload) {
     if (payload.email) {
       const existing = await this.userRepository.findByEmail(payload.email)
 
       if (existing && existing.id !== id) {
-        throw new ExceptionAlreadyExisting(`Пользователь с таким email (${payload.email}) уже существует`)
+        throw new AppErrorAlreadyExisting(`Пользователь с таким email (${payload.email}) уже существует`)
       }
     }
 
-    const user = await this.userRepository.update(id, payload)
+    const updateData: UpdateUser = {
+      email: payload.email
+    }
+
+    if (payload.password) {
+      updateData.passwordHash = await this.passwordRepository.hash(payload.password)
+    }
+
+    const user = await this.userRepository.update(id, updateData)
 
     if (!user) {
-      throw new ExceptionNotFound(`Пользователь с id=${id} не найден`)
+      throw new AppErrorNotFound(`Пользователь с id=${id} не найден`)
     }
 
     return user
@@ -51,19 +68,9 @@ export class UserUseCase {
     const user = await this.userRepository.delete(id)
 
     if (!user) {
-      throw new ExceptionNotFound(`Пользователь с id=${id} не найден`)
+      throw new AppErrorNotFound(`Пользователь с id=${id} не найден`)
     }
 
     return user
   }
-
-  // async create(payload: CreateUser) {
-  //   const existingUser = await this.userRepository.findByEmail(payload.email)
-
-  //   if (existingUser) {
-  //     throw new ExceptionAlreadyExisting(`Пользователь с таким email (${payload.email}) уже существует`)
-  //   }
-
-  //   return this.userRepository.create(payload)
-  // }
 }

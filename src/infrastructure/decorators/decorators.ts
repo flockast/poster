@@ -30,7 +30,7 @@ export default fp(async (app) => {
   const authMiddleware = createAuthMiddleware(jwtRepository)
   app.decorate('authenticate', authMiddleware)
 
-  const userUseCase = new UserUseCase(userRepository)
+  const userUseCase = new UserUseCase(userRepository, passwordRepository)
   app.decorate('userUseCase', userUseCase)
 
   const authUseCase = new AuthUseCase(userRepository, jwtRepository, passwordRepository)
