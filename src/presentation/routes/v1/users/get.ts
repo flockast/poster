@@ -12,7 +12,7 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
       }
     }
   }, () => {
-    return app.userUseCase.findAll()
+    return app.userReadUseCase.findAll()
   })
 
   app.get<{
@@ -27,7 +27,7 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
       }
     }
   }, (request) => {
-    return app.userUseCase.findById(request.params.userId)
+    return app.userReadUseCase.findById(request.params.userId)
   })
 
   app.get<{
@@ -42,7 +42,7 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
       }
     }
   }, (request) => {
-    return app.userUseCase.findByEmail(request.params.email)
+    return app.userReadUseCase.findByEmail(request.params.email)
   })
 }
 

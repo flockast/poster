@@ -17,7 +17,7 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
       }
     }
   }, (request) => {
-    return app.userUseCase.update(request.params.userId, request.body)
+    return app.userWriteUseCase.update(request.params.userId, request.body)
   })
 }
 

@@ -5,7 +5,7 @@ import { Static } from '@sinclair/typebox'
 const route: FastifyPluginAsyncTypebox = async (app) => {
   app.post<{
     Body: Static<typeof Auth.Requests.SignUp>
-  }>('/signup', {
+  }>('/registration', {
     schema: {
       body: Auth.Requests.SignUp,
       response: {
@@ -13,12 +13,12 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
       }
     }
   }, (request) => {
-    return app.authUseCase.signUp(request.body)
+    return app.userRegistrationUseCase.execute(request.body)
   })
 
   app.post<{
     Body: Static<typeof Auth.Requests.SignIn>
-  }>('/signin', {
+  }>('/login', {
     schema: {
       body: Auth.Requests.SignIn,
       response: {
@@ -26,7 +26,7 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
       }
     }
   }, (request) => {
-    return app.authUseCase.signIn(request.body)
+    return app.userLoginUseCase.execute(request.body)
   })
 }
 

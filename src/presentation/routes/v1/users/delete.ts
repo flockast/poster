@@ -15,7 +15,7 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
       }
     }
   }, (request) => {
-    return app.userUseCase.delete(request.params.userId)
+    return app.userWriteUseCase.delete(request.params.userId)
   })
 }
 

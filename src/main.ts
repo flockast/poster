@@ -27,10 +27,6 @@ export class Server {
     },
   })
 
-  private static async registerSensible() {
-    await Server.app.register(import('@fastify/sensible'))
-  }
-
   private static async setErrorHandler() {
     Server.app.setErrorHandler(errorHandler)
   }
@@ -85,7 +81,6 @@ export class Server {
   }
 
   public static async start() {
-    await Server.registerSensible()
     await Server.setErrorHandler()
     await Server.registerPlugins()
     await Server.registerDecorators()
