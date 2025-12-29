@@ -8,7 +8,7 @@ const extractToken = (request: FastifyRequest): string | null => {
   const authHeader = request.headers.authorization
 
   if (authHeader?.startsWith('Bearer ')) {
-    return authHeader.substring(7);
+    return authHeader.substring(7)
   }
 
   return null
