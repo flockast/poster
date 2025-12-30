@@ -1,8 +1,8 @@
 import { UpdateUser, User } from '@/domain/entities/user.entity'
 import { UserRepositoryPort } from '@/domain/ports/user.port'
-import { PasswordRepositoryPort } from '@/domain/ports/password.port'
-import { AppErrorNotFound, AppErrorAlreadyExisting } from '../../commons/exceptions'
-import { normalizeEmail } from '../../commons/normalize-email'
+import { PasswordPort } from '../../features/password/password.port'
+import { AppErrorNotFound, AppErrorAlreadyExisting } from '../../exceptions'
+import { normalizeEmail } from '../../utilities/normalize-email.utility'
 
 type UpdateUserPayload = Partial<{
   email: string
@@ -12,7 +12,7 @@ type UpdateUserPayload = Partial<{
 export class UserWriteUseCase {
   constructor (
     private readonly userRepository: UserRepositoryPort,
-    private readonly passwordRepository: PasswordRepositoryPort
+    private readonly passwordService: PasswordPort
   ) {}
 
   async update(id: User['id'], payload: UpdateUserPayload) {
@@ -30,7 +30,7 @@ export class UserWriteUseCase {
     }
 
     if (payload.password) {
-      updateUserPayload.passwordHash = await this.passwordRepository.hash(payload.password)
+      updateUserPayload.passwordHash = await this.passwordService.hash(payload.password)
     }
 
     const user = await this.userRepository.update(id, updateUserPayload)

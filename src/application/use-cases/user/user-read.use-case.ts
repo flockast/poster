@@ -1,7 +1,7 @@
 import { User } from '@/domain/entities/user.entity'
 import { UserRepositoryPort } from '@/domain/ports/user.port'
-import { AppErrorNotFound } from '../../commons/exceptions'
-import { normalizeEmail } from '../../commons/normalize-email'
+import { AppErrorNotFound } from '../../exceptions'
+import { normalizeEmail } from '../../utilities/normalize-email.utility'
 
 export class UserReadUseCase {
   constructor (

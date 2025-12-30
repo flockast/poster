@@ -1,4 +1,4 @@
-import { AppError } from '@/application/commons/exceptions'
+import { AppError } from '@/application/exceptions'
 import { type FastifyInstance } from 'fastify'
 
 export const errorHandler: FastifyInstance['errorHandler'] = (error, request, reply) => {

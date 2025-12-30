@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
-import { isJwtTokenPayload, type JwtTokenPayload } from '@/domain/entities/jwt.entity'
-import { JwtRepositoryPort } from '@/domain/ports/jwt.port'
+import { type AuthenticationUser, isAuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
+import type { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
 
-export class JwtRepository implements JwtRepositoryPort {
+export class AuthenticationUserService implements AuthenticationUserPort {
   private readonly config = {
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN
@@ -18,7 +18,7 @@ export class JwtRepository implements JwtRepositoryPort {
     }
   }
 
-  async sign(payload: JwtTokenPayload) {
+  async sign(payload: AuthenticationUser) {
     return jwt.sign(payload, this.config.secret!, {
       expiresIn: this.config.expiresIn as jwt.SignOptions['expiresIn']
     })
@@ -27,7 +27,7 @@ export class JwtRepository implements JwtRepositoryPort {
   async verify(token: string) {
     const payload = jwt.verify(token, this.config.secret!)
 
-    if (!isJwtTokenPayload(payload)) {
+    if (!isAuthenticationUser(payload)) {
       throw new Error('Неверная структура токена')
     }
 

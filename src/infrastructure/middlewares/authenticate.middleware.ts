@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
 import type { FastifyRequest } from 'fastify'
-import { AppErrorUnauthorized } from '@/application/commons/exceptions'
-import { JwtTokenPayload } from '@/domain/entities/jwt.entity'
-import { JwtRepositoryPort } from '@/domain/ports/jwt.port'
+import { AppErrorUnauthorized } from '@/application/exceptions'
+import type { AuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
+import type { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
 
 const extractToken = (request: FastifyRequest): string | null => {
   const authHeader = request.headers.authorization
@@ -14,7 +14,7 @@ const extractToken = (request: FastifyRequest): string | null => {
   return null
 }
 
-export const createAuthMiddleware = (jwtRepository: JwtRepositoryPort) => async (request: FastifyRequest) => {
+export const createAuthenticateMiddleware = (authenticationUserService: AuthenticationUserPort) => async (request: FastifyRequest) => {
     try {
       const token = extractToken(request)
 
@@ -22,9 +22,9 @@ export const createAuthMiddleware = (jwtRepository: JwtRepositoryPort) => async 
         throw new AppErrorUnauthorized('Не передан токен')
       }
 
-      const payload = await jwtRepository.verify(token)
+      const payload = await authenticationUserService.verify(token)
 
-      request.user = payload as JwtTokenPayload
+      request.user = payload as AuthenticationUser
     } catch (error: unknown) {
       if (error instanceof jwt.JsonWebTokenError) {
         throw new AppErrorUnauthorized('Неверный токен')

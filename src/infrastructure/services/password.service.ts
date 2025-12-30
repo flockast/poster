@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
-import { PasswordRepositoryPort } from '@/domain/ports/password.port'
+import { PasswordPort } from '@/application/features/password/password.port'
 
-export class PasswordRepository implements PasswordRepositoryPort {
+export class PasswordService implements PasswordPort {
   private readonly saltRounds = 10
 
   async hash(password: string): Promise<string> {

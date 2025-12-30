@@ -1,9 +1,9 @@
-export type JwtTokenPayload = {
+export type AuthenticationUser = {
   id: number
   email: string
 }
 
-export const isJwtTokenPayload = (payload: unknown): payload is JwtTokenPayload => {
+export const isAuthenticationUser = (payload: unknown): payload is AuthenticationUser => {
   if (typeof payload !== 'object' || payload === null) {
     return false
   }

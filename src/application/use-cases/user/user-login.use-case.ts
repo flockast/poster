@@ -1,8 +1,8 @@
 import { UserRepositoryPort } from '@/domain/ports/user.port'
-import { JwtRepositoryPort } from '@/domain/ports/jwt.port'
-import { PasswordRepositoryPort } from '@/domain/ports/password.port'
-import { AppErrorInvalidLogin } from '../../commons/exceptions'
-import { normalizeEmail } from '../../commons/normalize-email'
+import { AuthenticationUserPort } from '../../features/authentication-user/authentication-user.port'
+import { PasswordPort } from '../../features/password/password.port'
+import { AppErrorInvalidLogin } from '../../exceptions'
+import { normalizeEmail } from '../../utilities/normalize-email.utility'
 
 type SingInPayload = {
   email: string
@@ -12,8 +12,8 @@ type SingInPayload = {
 export class UserLoginUseCase {
   constructor (
     private readonly userRepository: UserRepositoryPort,
-    private readonly  passwordRepository: PasswordRepositoryPort,
-    private readonly jwtRepository: JwtRepositoryPort
+    private readonly  passwordService: PasswordPort,
+    private readonly authenticationUserService: AuthenticationUserPort
   ) {}
 
   async execute(payload: SingInPayload) {
@@ -23,13 +23,13 @@ export class UserLoginUseCase {
       throw new AppErrorInvalidLogin()
     }
 
-    const verifiedPassword = await this.passwordRepository.verify(payload.password, user?.passwordHash)
+    const verifiedPassword = await this.passwordService.verify(payload.password, user?.passwordHash)
 
     if (!verifiedPassword) {
       throw new AppErrorInvalidLogin()
     }
 
-    const token = await this.jwtRepository.sign({
+    const token = await this.authenticationUserService.sign({
       id: user.id,
       email: user.email
     })

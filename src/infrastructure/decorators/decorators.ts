@@ -1,16 +1,16 @@
 import fp from 'fastify-plugin'
-import { JwtTokenPayload } from '@/domain/entities/jwt.entity'
+import { AuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
+import { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
 import { UserRepositoryPort } from '@/domain/ports/user.port'
-import { JwtRepositoryPort } from '@/domain/ports/jwt.port'
 import { UserReadUseCase } from '@/application/use-cases/user/user-read.use-case'
 import { UserWriteUseCase } from '@/application/use-cases/user/user-write.use-case'
 import { UserRegistrationUseCase } from '@/application/use-cases/user/user-registration.use-case'
 import { UserLoginUseCase } from '@/application/use-cases/user/user-login.use-case'
 import { UserRepository } from '../repositories/user.repository'
-import { JwtRepository } from '../repositories/jwt.repository'
-import { createAuthMiddleware } from '../middlewares/auth.middleware'
-import { PasswordRepositoryPort } from '@/domain/ports/password.port'
-import { PasswordRepository } from '../repositories/password.repository'
+import { AuthenticationUserService } from '../services/authentication-user.service'
+import { createAuthenticateMiddleware } from '../middlewares/authenticate.middleware'
+import { PasswordPort } from '@/application/features/password/password.port'
+import { PasswordService } from '../services/password.service'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -22,27 +22,27 @@ declare module 'fastify' {
   }
 
   interface FastifyRequest {
-    user?: JwtTokenPayload
+    user?: AuthenticationUser
   }
 }
 
 export default fp(async (app) => {
   const userRepository: UserRepositoryPort = new UserRepository(app.db)
-  const jwtRepository: JwtRepositoryPort = new JwtRepository()
-  const passwordRepository: PasswordRepositoryPort = new PasswordRepository()
+  const authenticationUserService: AuthenticationUserPort = new AuthenticationUserService()
+  const passwordService: PasswordPort = new PasswordService()
 
-  const authMiddleware = createAuthMiddleware(jwtRepository)
-  app.decorate('authenticate', authMiddleware)
+  const authenticateMiddleware = createAuthenticateMiddleware(authenticationUserService)
+  app.decorate('authenticate', authenticateMiddleware)
 
   const userReadUseCase = new UserReadUseCase(userRepository)
   app.decorate('userReadUseCase', userReadUseCase)
 
-  const userWriteUseCase = new UserWriteUseCase(userRepository, passwordRepository)
+  const userWriteUseCase = new UserWriteUseCase(userRepository, passwordService)
   app.decorate('userWriteUseCase', userWriteUseCase)
 
-  const userRegistrationUseCase = new UserRegistrationUseCase(userRepository, passwordRepository, jwtRepository)
+  const userRegistrationUseCase = new UserRegistrationUseCase(userRepository, passwordService, authenticationUserService)
   app.decorate('userRegistrationUseCase', userRegistrationUseCase)
 
-  const userLoginUseCase = new UserLoginUseCase(userRepository, passwordRepository, jwtRepository)
+  const userLoginUseCase = new UserLoginUseCase(userRepository, passwordService, authenticationUserService)
   app.decorate('userLoginUseCase', userLoginUseCase)
 })

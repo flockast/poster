@@ -1,8 +1,8 @@
 import { UserRepositoryPort } from '@/domain/ports/user.port'
-import { JwtRepositoryPort } from '@/domain/ports/jwt.port'
-import { PasswordRepositoryPort } from '@/domain/ports/password.port'
-import { AppErrorAlreadyExisting } from '../../commons/exceptions'
-import { normalizeEmail } from '../../commons/normalize-email'
+import { AuthenticationUserPort } from '../../features/authentication-user/authentication-user.port'
+import { PasswordPort } from '../../features/password/password.port'
+import { AppErrorAlreadyExisting } from '../../exceptions'
+import { normalizeEmail } from '../../utilities/normalize-email.utility'
 
 type SignUpPayload = {
   email: string
@@ -12,8 +12,8 @@ type SignUpPayload = {
 export class UserRegistrationUseCase {
   constructor (
     private readonly userRepository: UserRepositoryPort,
-    private readonly  passwordRepository: PasswordRepositoryPort,
-    private readonly jwtRepository: JwtRepositoryPort
+    private readonly  passwordService: PasswordPort,
+    private readonly authenticationUserService: AuthenticationUserPort
   ) {}
 
   async execute(payload: SignUpPayload) {
@@ -26,11 +26,11 @@ export class UserRegistrationUseCase {
 
     const createUserPayload = {
       email: normalizedEmail,
-      passwordHash: await this.passwordRepository.hash(payload.password)
+      passwordHash: await this.passwordService.hash(payload.password)
     }
 
     const user = await this.userRepository.create(createUserPayload)
-    const token = await this.jwtRepository.sign({
+    const token = await this.authenticationUserService.sign({
       id: user.id,
       email: user.email
     })
