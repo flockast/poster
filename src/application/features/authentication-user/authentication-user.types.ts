@@ -1,7 +1,6 @@
-export type AuthenticationUser = {
-  id: number
-  email: string
-}
+import { User } from '@/domain/entities/user.entity'
+
+export type AuthenticationUser = Pick<User, 'id' | 'email'>
 
 export const isAuthenticationUser = (payload: unknown): payload is AuthenticationUser => {
   if (typeof payload !== 'object' || payload === null) {
