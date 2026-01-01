@@ -1,7 +1,7 @@
 import { type Kysely, type SelectExpression, sql } from 'kysely'
 import type { DB } from 'kysely-codegen'
-import { User, CreateUser, UpdateUser } from '@/domain/entities/user.entity'
-import { UserRepositoryPort } from '@/domain/ports/user.port'
+import type { User, CreateUser, UpdateUser } from '@/domain/entities/user.entity'
+import type { UserRepositoryPort } from '@/domain/ports/user.port'
 
 export class UserRepository implements UserRepositoryPort {
   protected readonly DEFAULT_SELECT_FIELDS = [

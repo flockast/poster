@@ -1,6 +1,6 @@
-import { UserRepositoryPort } from '@/domain/ports/user.port'
-import { AuthenticationUserPort } from '../../features/authentication-user/authentication-user.port'
-import { PasswordPort } from '../../features/password/password.port'
+import type { UserRepositoryPort } from '@/domain/ports/user.port'
+import type { AuthenticationUserPort } from '../../features/authentication-user/authentication-user.port'
+import type { PasswordPort } from '../../features/password/password.port'
 import { AppErrorInvalidLogin } from '../../exceptions'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
 
@@ -23,7 +23,7 @@ export class UserLoginUseCase {
       throw new AppErrorInvalidLogin()
     }
 
-    const verifiedPassword = await this.passwordService.verify(payload.password, user?.passwordHash)
+    const verifiedPassword = await this.passwordService.verify(payload.password, user.passwordHash)
 
     if (!verifiedPassword) {
       throw new AppErrorInvalidLogin()

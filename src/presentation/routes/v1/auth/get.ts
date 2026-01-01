@@ -11,7 +11,7 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
       }
     }
   }, (request) => {
-    return app.userReadUseCase.findById(request.user?.id!)
+    return app.userReadUseCase.findById(request.user?.id as number)
   })
 }
 

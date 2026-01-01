@@ -1,6 +1,6 @@
 import { Auth } from '@/presentation/schemas'
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox'
-import { Static } from '@sinclair/typebox'
+import type { Static } from '@sinclair/typebox'
 
 const route: FastifyPluginAsyncTypebox = async (app) => {
   app.post<{

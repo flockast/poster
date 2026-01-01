@@ -1,16 +1,16 @@
 import fp from 'fastify-plugin'
-import { AuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
-import { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
-import { UserRepositoryPort } from '@/domain/ports/user.port'
+import type { UserRepositoryPort } from '@/domain/ports/user.port'
+import type { AuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
+import type { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
+import type { PasswordPort } from '@/application/features/password/password.port'
 import { UserReadUseCase } from '@/application/use-cases/user/user-read.use-case'
 import { UserWriteUseCase } from '@/application/use-cases/user/user-write.use-case'
 import { UserRegistrationUseCase } from '@/application/use-cases/user/user-registration.use-case'
 import { UserLoginUseCase } from '@/application/use-cases/user/user-login.use-case'
 import { UserRepository } from '../repositories/user.repository'
 import { AuthenticationUserService } from '../services/authentication-user.service'
-import { createAuthenticateMiddleware } from '../middlewares/authenticate.middleware'
-import { PasswordPort } from '@/application/features/password/password.port'
 import { PasswordService } from '../services/password.service'
+import { createAuthenticateMiddleware } from '../middlewares/authenticate.middleware'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -26,7 +26,7 @@ declare module 'fastify' {
   }
 }
 
-export default fp(async (app) => {
+export default fp((app) => {
   const userRepository: UserRepositoryPort = new UserRepository(app.db)
   const authenticationUserService: AuthenticationUserPort = new AuthenticationUserService()
   const passwordService: PasswordPort = new PasswordService()

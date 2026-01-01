@@ -2,10 +2,11 @@ export abstract class AppError extends Error {
   abstract readonly code: string
   abstract readonly statusCode: number
 
-  constructor(message: string, public readonly details?: any) {
-    super(message)
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options)
   }
 }
+
 
 export class AppErrorNotFound extends AppError {
   readonly code = 'NOT_FOUND'

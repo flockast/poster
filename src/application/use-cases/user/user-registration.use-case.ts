@@ -1,6 +1,6 @@
-import { UserRepositoryPort } from '@/domain/ports/user.port'
-import { AuthenticationUserPort } from '../../features/authentication-user/authentication-user.port'
-import { PasswordPort } from '../../features/password/password.port'
+import type { UserRepositoryPort } from '@/domain/ports/user.port'
+import type { AuthenticationUserPort } from '../../features/authentication-user/authentication-user.port'
+import type { PasswordPort } from '../../features/password/password.port'
 import { AppErrorAlreadyExisting } from '../../exceptions'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
 

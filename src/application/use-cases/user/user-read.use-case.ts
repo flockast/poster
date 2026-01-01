@@ -1,11 +1,11 @@
-import { User } from '@/domain/entities/user.entity'
-import { UserRepositoryPort } from '@/domain/ports/user.port'
+import type { User } from '@/domain/entities/user.entity'
+import type { UserRepositoryPort } from '@/domain/ports/user.port'
 import { AppErrorNotFound } from '../../exceptions'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
 
 export class UserReadUseCase {
   constructor (
-    private readonly userRepository: UserRepositoryPort,
+    private readonly userRepository: UserRepositoryPort
   ) {}
 
   findAll() {

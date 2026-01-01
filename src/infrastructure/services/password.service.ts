@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { PasswordPort } from '@/application/features/password/password.port'
+import type { PasswordPort } from '@/application/features/password/password.port'
 
 export class PasswordService implements PasswordPort {
   private readonly saltRounds = 10

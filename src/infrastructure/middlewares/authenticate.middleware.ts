@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import type { FastifyRequest } from 'fastify'
 import { AppErrorUnauthorized } from '@/application/exceptions'
-import type { AuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
+import { isAuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
 import type { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
 
 const extractToken = (request: FastifyRequest): string | null => {
@@ -24,7 +24,9 @@ export const createAuthenticateMiddleware = (authenticationUserService: Authenti
 
       const payload = await authenticationUserService.verify(token)
 
-      request.user = payload as AuthenticationUser
+      if (isAuthenticationUser(payload)) {
+        request.user = payload
+      }
     } catch (error: unknown) {
       if (error instanceof jwt.JsonWebTokenError) {
         throw new AppErrorUnauthorized('Неверный токен')

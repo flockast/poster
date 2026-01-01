@@ -39,7 +39,7 @@ export default fp(async (fastify) => {
   try {
     await sql`SELECT 1`.execute(db)
     fastify.log.info('Database connection successful!')
-  } catch (error) {
+  } catch {
     fastify.log.error('Failed to connect to the database: ')
   }
 

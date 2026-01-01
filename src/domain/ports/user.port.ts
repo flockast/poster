@@ -1,4 +1,4 @@
-import { User, CreateUser, UpdateUser } from '../entities/user.entity'
+import type { User, CreateUser, UpdateUser } from '../entities/user.entity'
 
 export interface UserRepositoryPort {
   findAll(): Promise<User[]>

@@ -3,7 +3,7 @@ import { Type } from '@sinclair/typebox'
 export const User = Type.Object({
   user: Type.Object({
     id: Type.Number(),
-    email: Type.String(),
+    email: Type.String()
   }),
   token: Type.String()
 })

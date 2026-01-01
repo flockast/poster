@@ -7,7 +7,6 @@ export const errorHandler: FastifyInstance['errorHandler'] = (error, request, re
       error: {
         code: error.code,
         message: error.message,
-        details: error.details,
         timestamp: new Date().toISOString()
       }
     })
