@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { type AuthenticationUser, isAuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
 import type { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
+import { AppErrorUnauthorized } from '@/application/exceptions'
 
 export class AuthenticationUserService implements AuthenticationUserPort {
   private readonly config = {
@@ -28,7 +29,7 @@ export class AuthenticationUserService implements AuthenticationUserPort {
     const payload = jwt.verify(token, this.config.secret!)
 
     if (!isAuthenticationUser(payload)) {
-      throw new Error('Неверная структура токена')
+      throw new AppErrorUnauthorized('Неверная структура токена')
     }
 
     return payload

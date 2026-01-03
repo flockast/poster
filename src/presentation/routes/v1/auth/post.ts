@@ -1,15 +1,16 @@
-import { Auth } from '@/presentation/schemas'
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox'
 import type { Static } from '@sinclair/typebox'
+import { SchemaUser } from '@/presentation/schemas'
 
 const route: FastifyPluginAsyncTypebox = async (app) => {
   app.post<{
-    Body: Static<typeof Auth.Requests.SignUp>
+    Body: Static<typeof SchemaUser.RegistrationRequest>
   }>('/registration', {
     schema: {
-      body: Auth.Requests.SignUp,
+      tags: ['Auth'],
+      body: SchemaUser.RegistrationRequest,
       response: {
-        200: Auth.Responses.User
+        200: SchemaUser.RegistrationResponse
       }
     }
   }, (request) => {
@@ -17,16 +18,17 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
   })
 
   app.post<{
-    Body: Static<typeof Auth.Requests.SignIn>
+    Body: Static<typeof SchemaUser.LoginRequest>
   }>('/login', {
     schema: {
-      body: Auth.Requests.SignIn,
+      tags: ['Auth'],
+      body: SchemaUser.LoginRequest,
       response: {
-        200: Auth.Responses.User
+        200: SchemaUser.LoginResponse
       }
     }
   }, (request) => {
-    return app.userLoginUseCase.execute(request.body)
+     return app.userLoginUseCase.execute(request.body)
   })
 }
 

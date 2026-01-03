@@ -1,14 +1,15 @@
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox'
 import type { Static } from '@sinclair/typebox'
-import { Users } from '../../../schemas'
+import { USER_ROLES } from '@/domain/entities/user.entity'
+import { SchemaUser } from '../../../schemas'
 
 const route: FastifyPluginAsyncTypebox = async (app) => {
   app.get('/', {
-    onRequest: [app.authenticate],
+    onRequest: [app.authenticate, app.permission([USER_ROLES.ADMIN])],
     schema: {
       tags: ['Users'],
       response: {
-        200: Users.Responses.Users
+        200: SchemaUser.UsersList
       }
     }
   }, () => {
@@ -16,29 +17,29 @@ const route: FastifyPluginAsyncTypebox = async (app) => {
   })
 
   app.get<{
-    Params: Static<typeof Users.Requests.UserId>
-  }>('/:userId', {
-    onRequest: [app.authenticate],
+    Params: Static<typeof SchemaUser.UserId>
+  }>('/:id', {
+    onRequest: [app.authenticate, app.permission([USER_ROLES.ADMIN])],
     schema: {
       tags: ['Users'],
-      params: Users.Requests.UserId,
+      params: SchemaUser.UserId,
       response: {
-        200: Users.Responses.User
+        200: SchemaUser.User
       }
     }
   }, (request) => {
-    return app.userReadUseCase.findById(request.params.userId)
+    return app.userReadUseCase.findById(request.params.id)
   })
 
   app.get<{
-    Params: Static<typeof Users.Requests.UserEmail>
+    Params: Static<typeof SchemaUser.UserEmail>
   }>('/email/:email', {
     onRequest: [app.authenticate],
     schema: {
       tags: ['Users'],
-      params: Users.Requests.UserEmail,
+      params: SchemaUser.UserEmail,
       response: {
-        200: Users.Responses.User
+        200: SchemaUser.User
       }
     }
   }, (request) => {

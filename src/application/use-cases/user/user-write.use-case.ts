@@ -1,13 +1,16 @@
 import type { UpdateUser, User } from '@/domain/entities/user.entity'
 import type { UserRepositoryPort } from '@/domain/ports/user.port'
 import type { PasswordPort } from '../../features/password/password.port'
-import { AppErrorNotFound, AppErrorAlreadyExisting } from '../../exceptions'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
+import { AppErrorNotFound, AppErrorAlreadyExisting } from '../../exceptions'
 
-type UpdateUserPayload = Partial<{
+type CreateUserPayload = {
   email: string
-  password: string
-}>
+  password: string,
+  role: User['role']
+}
+
+type UpdateUserPayload = Partial<CreateUserPayload>
 
 export class UserWriteUseCase {
   constructor (
@@ -33,6 +36,10 @@ export class UserWriteUseCase {
       updateUserPayload.passwordHash = await this.passwordService.hash(payload.password)
     }
 
+    if (payload.role) {
+      updateUserPayload.role = payload.role
+    }
+
     const user = await this.userRepository.update(id, updateUserPayload)
 
     if (!user) {
@@ -40,6 +47,25 @@ export class UserWriteUseCase {
     }
 
     return user
+  }
+
+  async create(payload: CreateUserPayload) {
+    const email = normalizeEmail(payload.email)
+    const existing = await this.userRepository.findByEmail(email)
+
+    if (existing) {
+      throw new AppErrorAlreadyExisting(`Пользователь с таким email (${email}) уже существует`)
+    }
+
+    const passwordHash = await this.passwordService.hash(payload.password)
+
+    const newUser = await this.userRepository.create({
+      ...payload,
+      email,
+      passwordHash
+    })
+
+    return newUser
   }
 
   async delete(id: User['id']) {

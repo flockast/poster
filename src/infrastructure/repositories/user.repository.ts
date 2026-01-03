@@ -8,6 +8,7 @@ export class UserRepository implements UserRepositoryPort {
     'id',
     'email',
     'password_hash as passwordHash',
+    'role',
     'created_at as createdAt',
     'updated_at as updatedAt'
   ] satisfies ReadonlyArray<SelectExpression<DB, 'users'>>
@@ -42,7 +43,8 @@ export class UserRepository implements UserRepositoryPort {
       .insertInto('users')
       .values({
         email: payload.email,
-        password_hash: payload.passwordHash
+        password_hash: payload.passwordHash,
+        role: payload.role
       })
       .returning(this.DEFAULT_SELECT_FIELDS)
       .executeTakeFirstOrThrow()
@@ -54,6 +56,7 @@ export class UserRepository implements UserRepositoryPort {
       .set({
         email: payload.email,
         password_hash: payload.passwordHash,
+        role: payload.role,
         updated_at: sql`CURRENT_TIMESTAMP`
       })
       .where('id', '=', id)

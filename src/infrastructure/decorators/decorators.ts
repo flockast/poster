@@ -3,6 +3,7 @@ import type { UserRepositoryPort } from '@/domain/ports/user.port'
 import type { AuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
 import type { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
 import type { PasswordPort } from '@/application/features/password/password.port'
+import type { User } from '@/domain/entities/user.entity'
 import { UserReadUseCase } from '@/application/use-cases/user/user-read.use-case'
 import { UserWriteUseCase } from '@/application/use-cases/user/user-write.use-case'
 import { UserRegistrationUseCase } from '@/application/use-cases/user/user-registration.use-case'
@@ -11,10 +12,12 @@ import { UserRepository } from '../repositories/user.repository'
 import { AuthenticationUserService } from '../services/authentication-user.service'
 import { PasswordService } from '../services/password.service'
 import { createAuthenticateMiddleware } from '../middlewares/authenticate.middleware'
+import { createPermissionMiddleware } from '../middlewares/permission.middleware'
 
 declare module 'fastify' {
   interface FastifyInstance {
     authenticate: (request: FastifyRequest) => Promise<void>
+    permission: (roles: User['role'][]) => (request: FastifyRequest) => Promise<void>
     userReadUseCase: UserReadUseCase
     userWriteUseCase: UserWriteUseCase
     userRegistrationUseCase: UserRegistrationUseCase
@@ -33,6 +36,9 @@ export default fp((app) => {
 
   const authenticateMiddleware = createAuthenticateMiddleware(authenticationUserService)
   app.decorate('authenticate', authenticateMiddleware)
+
+  const permissionMiddleware = createPermissionMiddleware()
+  app.decorate('permission', permissionMiddleware)
 
   const userReadUseCase = new UserReadUseCase(userRepository)
   app.decorate('userReadUseCase', userReadUseCase)

@@ -22,12 +22,13 @@ export const errorHandler: FastifyInstance['errorHandler'] = (error, request, re
       },
       error
     })
-    reply.status(500).send({
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Внутренняя ошибка сервера',
-        timestamp: new Date().toISOString()
-      }
-    })
+    reply.send(error)
+    // reply.status(500).send({
+    //   error: {
+    //     code: 'INTERNAL_ERROR',
+    //     message: 'Внутренняя ошибка сервера',
+    //     timestamp: new Date().toISOString()
+    //   }
+    // })
   }
 }

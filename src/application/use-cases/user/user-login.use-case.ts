@@ -31,7 +31,8 @@ export class UserLoginUseCase {
 
     const token = await this.authenticationUserService.sign({
       id: user.id,
-      email: user.email
+      email: user.email,
+      role: user.role
     })
 
     return {

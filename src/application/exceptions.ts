@@ -7,7 +7,6 @@ export abstract class AppError extends Error {
   }
 }
 
-
 export class AppErrorNotFound extends AppError {
   readonly code = 'NOT_FOUND'
   readonly statusCode = 404
@@ -16,6 +15,11 @@ export class AppErrorNotFound extends AppError {
 export class AppErrorUnauthorized extends AppError {
   readonly code = 'UNAUTHORIZED'
   readonly statusCode = 401
+}
+
+export class AppErrorPermissions extends AppError {
+  readonly code = 'FORBIDDEN'
+  readonly statusCode = 403
 }
 
 export class AppErrorAlreadyExisting extends AppError {

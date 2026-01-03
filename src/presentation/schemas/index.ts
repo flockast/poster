@@ -1,2 +1,1 @@
-export { default as Users } from './users'
-export { default as Auth } from './auth'
+export * as SchemaUser from './user'
