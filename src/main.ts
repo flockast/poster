@@ -1,8 +1,8 @@
+import qs from 'qs'
+import autoLoad from '@fastify/autoload'
+import { fastify } from 'fastify'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import { fastify } from 'fastify'
-import autoLoad from '@fastify/autoload'
-import qs from 'qs'
 import { errorHandler } from '@/presentation/handlers/error.handler'
 
 const __filename = fileURLToPath(import.meta.url)

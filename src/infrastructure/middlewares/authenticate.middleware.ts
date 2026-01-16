@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import type { FastifyRequest } from 'fastify'
-import type { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
-import { isAuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
+import type { AuthenticationUserServicePort } from '@/application/services/authentication-user/authentication-user.port'
+import { isAuthenticationUser } from '@/application/services/authentication-user/authentication-user.types'
 import { AppErrorUnauthorized } from '@/application/exceptions'
 
 const extractToken = (request: FastifyRequest): string | null => {
@@ -14,7 +14,7 @@ const extractToken = (request: FastifyRequest): string | null => {
   return null
 }
 
-export const createAuthenticateMiddleware = (authenticationUserService: AuthenticationUserPort) => async (request: FastifyRequest) => {
+export const createAuthenticateMiddleware = (authenticationUserService: AuthenticationUserServicePort) => async (request: FastifyRequest) => {
   try {
     const token = extractToken(request)
 

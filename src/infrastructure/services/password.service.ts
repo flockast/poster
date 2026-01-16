@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
-import type { PasswordPort } from '@/application/features/password/password.port'
+import type { PasswordServicePort } from '@/application/services/password/password.port'
 
-export class PasswordService implements PasswordPort {
+export class PasswordService implements PasswordServicePort {
   private readonly saltRounds = 10
 
   async hash(password: string): Promise<string> {

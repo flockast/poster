@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
-import { type AuthenticationUser, isAuthenticationUser } from '@/application/features/authentication-user/authentication-user.types'
-import type { AuthenticationUserPort } from '@/application/features/authentication-user/authentication-user.port'
+import type { AuthenticationUserServicePort } from '@/application/services/authentication-user/authentication-user.port'
+import { type AuthenticationUser, isAuthenticationUser } from '@/application/services/authentication-user/authentication-user.types'
 import { AppErrorUnauthorized } from '@/application/exceptions'
 
-export class AuthenticationUserService implements AuthenticationUserPort {
+export class AuthenticationUserService implements AuthenticationUserServicePort {
   private readonly config = {
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN

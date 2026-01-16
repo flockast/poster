@@ -1,6 +1,6 @@
 import type { UpdateUser, User } from '@/domain/entities/user.entity'
 import type { UserRepositoryPort } from '@/domain/ports/user.port'
-import type { PasswordPort } from '../../features/password/password.port'
+import type { PasswordServicePort } from '../../services/password/password.port'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
 import { AppErrorNotFound, AppErrorAlreadyExisting } from '../../exceptions'
 
@@ -15,7 +15,7 @@ type UpdateUserPayload = Partial<CreateUserPayload>
 export class UserWriteUseCase {
   constructor (
     private readonly userRepository: UserRepositoryPort,
-    private readonly passwordService: PasswordPort
+    private readonly passwordService: PasswordServicePort
   ) {}
 
   async update(id: User['id'], payload: UpdateUserPayload) {

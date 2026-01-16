@@ -1,6 +1,6 @@
 import type { UserRepositoryPort } from '@/domain/ports/user.port'
-import type { AuthenticationUserPort } from '../../features/authentication-user/authentication-user.port'
-import type { PasswordPort } from '../../features/password/password.port'
+import type { AuthenticationUserServicePort } from '../../services/authentication-user/authentication-user.port'
+import type { PasswordServicePort } from '../../services/password/password.port'
 import { AppErrorInvalidLogin } from '../../exceptions'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
 
@@ -12,8 +12,8 @@ type SingInPayload = {
 export class UserLoginUseCase {
   constructor (
     private readonly userRepository: UserRepositoryPort,
-    private readonly  passwordService: PasswordPort,
-    private readonly authenticationUserService: AuthenticationUserPort
+    private readonly  passwordService: PasswordServicePort,
+    private readonly authenticationUserService: AuthenticationUserServicePort
   ) {}
 
   async execute(payload: SingInPayload) {
