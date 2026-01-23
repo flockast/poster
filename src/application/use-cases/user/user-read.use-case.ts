@@ -1,5 +1,5 @@
-import type { User } from '@/domain/entities/user.entity'
-import type { UserRepositoryPort } from '@/domain/ports/user.port'
+import type { User } from '@/application/entities/user.entity'
+import type { UserRepositoryPort } from '@/application/repositories/user.repository.port'
 import { AppErrorNotFound } from '../../exceptions'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
 

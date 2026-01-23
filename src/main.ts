@@ -27,14 +27,7 @@ export class Server {
     }
   })
 
-  private static async registerPlugins() {
-    await Server.app.register(autoLoad, {
-      dir: join(__dirname, 'infrastructure/plugins'),
-      forceESM: true
-    })
-  }
-
-  private static async registerServices() {
+  private static async registerDecorators() {
     await Server.app.register(autoLoad, {
       dir: join(__dirname, 'infrastructure/decorators'),
       forceESM: true
@@ -81,8 +74,7 @@ export class Server {
   }
 
   public static async start() {
-    await Server.registerPlugins()
-    await Server.registerServices()
+    await Server.registerDecorators()
     await Server.setErrorHandler()
     await Server.registerSwagger()
     await Server.registerRoutes()

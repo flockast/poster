@@ -1,6 +1,6 @@
-import type { UpdateUser, User } from '@/domain/entities/user.entity'
-import type { UserRepositoryPort } from '@/domain/ports/user.port'
-import type { PasswordServicePort } from '../../services/password/password.port'
+import type { UpdateUser, User } from '@/application/entities/user.entity'
+import type { UserRepositoryPort } from '@/application/repositories/user.repository.port'
+import type { PasswordServicePort } from '../../services/password/password.service.port'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
 import { AppErrorNotFound, AppErrorAlreadyExisting } from '../../exceptions'
 

@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox'
-import { USER_ROLES } from '@/domain/entities/user.entity'
+import { USER_ROLES } from '@/application/entities/user.entity'
 
 export const UserId = Type.Object({
   id: Type.Number()

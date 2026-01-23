@@ -1,6 +1,6 @@
-import type { UserRepositoryPort } from '@/domain/ports/user.port'
-import type { AuthenticationUserServicePort } from '../../services/authentication-user/authentication-user.port'
-import type { PasswordServicePort } from '../../services/password/password.port'
+import type { UserRepositoryPort } from '@/application/repositories/user.repository.port'
+import type { AuthenticationUserServicePort } from '../../services/authentication-user/authentication-user.service.port'
+import type { PasswordServicePort } from '../../services/password/password.service.port'
 import { AppErrorInvalidLogin } from '../../exceptions'
 import { normalizeEmail } from '../../utilities/normalize-email.utility'
 

@@ -1,6 +1,6 @@
 import type { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox'
 import type { Static } from '@sinclair/typebox'
-import { USER_ROLES } from '@/domain/entities/user.entity'
+import { USER_ROLES } from '@/application/entities/user.entity'
 import { SchemaUser } from '../../../schemas'
 
 const route: FastifyPluginAsyncTypebox = async (app) => {

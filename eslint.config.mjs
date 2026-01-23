@@ -6,7 +6,8 @@ export default tseslint.config({
   files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
   ignores: ['eslint.config.mjs'],
   extends: [
-    tseslint.configs.recommended
+    tseslint.configs.recommended,
+    tseslint.configs.recommendedTypeChecked
   ],
   plugins: {
     '@stylistic': stylistic

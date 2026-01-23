@@ -1,9 +1,9 @@
 import fp from 'fastify-plugin'
-import type { UserRepositoryPort } from '@/domain/ports/user.port'
-import type { AuthenticationUser } from '@/application/services/authentication-user/authentication-user.types'
-import type { AuthenticationUserServicePort } from '@/application/services/authentication-user/authentication-user.port'
-import type { PasswordServicePort } from '@/application/services/password/password.port'
-import type { User } from '@/domain/entities/user.entity'
+import type { UserRepositoryPort } from '@/application/repositories/user.repository.port'
+import type { AuthenticationUser } from '@/application/services/authentication-user/authentication-user.service.types'
+import type { AuthenticationUserServicePort } from '@/application/services/authentication-user/authentication-user.service.port'
+import type { PasswordServicePort } from '@/application/services/password/password.service.port'
+import type { User } from '@/application/entities/user.entity'
 import { UserReadUseCase } from '@/application/use-cases/user/user-read.use-case'
 import { UserWriteUseCase } from '@/application/use-cases/user/user-write.use-case'
 import { UserRegistrationUseCase } from '@/application/use-cases/user/user-registration.use-case'
@@ -13,6 +13,9 @@ import { AuthenticationUserService } from '../services/authentication-user.servi
 import { PasswordService } from '../services/password.service'
 import { createAuthenticateMiddleware } from '../middlewares/authenticate.middleware'
 import { createPermissionMiddleware } from '../middlewares/permission.middleware'
+import { DatabaseService } from '../services/database.service'
+import { SeedService } from '../services/seed.service'
+import { ConfigService } from '../services/config.service'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -29,10 +32,19 @@ declare module 'fastify' {
   }
 }
 
-export default fp((app) => {
-  const userRepository: UserRepositoryPort = new UserRepository(app.db)
-  const authenticationUserService: AuthenticationUserServicePort = new AuthenticationUserService()
+export default fp(async (app) => {
+  const configService = new ConfigService()
+
+  const databaseService = new DatabaseService(app.log, configService.getDatabase())
+  await databaseService.init()
+
   const passwordService: PasswordServicePort = new PasswordService()
+
+  const seedService = new SeedService(databaseService.get(), app.log, passwordService, configService.getRootAdmin())
+  await seedService.createRootUser()
+
+  const userRepository: UserRepositoryPort = new UserRepository(databaseService.get())
+  const authenticationUserService: AuthenticationUserServicePort = new AuthenticationUserService(configService.getToken())
 
   const authenticateMiddleware = createAuthenticateMiddleware(authenticationUserService)
   app.decorate('authenticate', authenticateMiddleware)
@@ -51,4 +63,6 @@ export default fp((app) => {
 
   const userLoginUseCase = new UserLoginUseCase(userRepository, passwordService, authenticationUserService)
   app.decorate('userLoginUseCase', userLoginUseCase)
+
+  app.addHook('onClose', () => databaseService.destroy())
 })
