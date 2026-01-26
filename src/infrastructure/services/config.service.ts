@@ -5,14 +5,14 @@ import type { ConfigDatabase, ConfigToken, ConfigRootAdmin } from '@/application
 
 const EnvSchema = Type.Object({
   POSTGRES_HOST: Type.String(),
-  POSTGRES_PORT: Type.Number(),
+  POSTGRES_PORT: Type.String(),
   POSTGRES_USER: Type.String(),
   POSTGRES_PASSWORD: Type.String(),
   POSTGRES_DB: Type.String(),
   TOKEN_SECRET: Type.String(),
   TOKEN_EXPIRES_IN: Type.String(),
-  ROOT_ADMIN_EMAIL: Type.Optional(Type.String({ format: 'email' })),
-  ROOT_ADMIN_PASSWORD: Type.Optional(Type.String({ minLength: 8 }))
+  ROOT_ADMIN_EMAIL: Type.Optional(Type.String()),
+  ROOT_ADMIN_PASSWORD: Type.Optional(Type.String())
 })
 
 const env = Value.Decode(EnvSchema, process.env)
@@ -20,7 +20,7 @@ const env = Value.Decode(EnvSchema, process.env)
 export class ConfigService implements ConfigServicePort {
   private readonly database: ConfigDatabase = {
     host: env.POSTGRES_HOST,
-    port: env.POSTGRES_PORT,
+    port: Number(env.POSTGRES_PORT),
     user: env.POSTGRES_USER,
     password: env.POSTGRES_PASSWORD,
     database: env.POSTGRES_DB

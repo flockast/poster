@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import type { FastifyRequest } from 'fastify'
 import type { AuthenticationUserServicePort } from '@/application/services/authentication-user/authentication-user.service.port'
 import { isAuthenticationUser } from '@/application/services/authentication-user/authentication-user.service.types'
-import { AppErrorUnauthorized } from '@/application/exceptions'
+import { AppErrorUnauthorized } from '@/application/common/exceptions'
 
 const extractToken = (request: FastifyRequest): string | null => {
   const authHeader = request.headers.authorization

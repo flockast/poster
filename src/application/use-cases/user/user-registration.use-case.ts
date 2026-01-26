@@ -2,8 +2,8 @@ import { USER_ROLES } from '@/application/entities/user.entity'
 import type { UserRepositoryPort } from '@/application/repositories/user.repository.port'
 import type { AuthenticationUserServicePort } from '../../services/authentication-user/authentication-user.service.port'
 import type { PasswordServicePort } from '../../services/password/password.service.port'
-import { AppErrorAlreadyExisting } from '../../exceptions'
-import { normalizeEmail } from '../../utilities/normalize-email.utility'
+import { AppErrorAlreadyExisting } from '../../common/exceptions'
+import { normalizeEmail } from '../../common/utilities/normalize-email.utility'
 
 type RegistrationPayload = {
   email: string

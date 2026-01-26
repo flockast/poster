@@ -1,4 +1,6 @@
 # Poster
+Basic API for a blog, based on a clean architecture
+Built with Fastify, Postgress, Kysely, Typebox, Swagger
 
 ## Installation
 ```sh

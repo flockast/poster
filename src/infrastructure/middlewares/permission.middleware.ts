@@ -1,6 +1,6 @@
 import type { FastifyRequest } from 'fastify'
 import type { User } from '@/application/entities/user.entity'
-import { AppErrorPermissions, AppErrorUnauthorized } from '@/application/exceptions'
+import { AppErrorPermissions, AppErrorUnauthorized } from '@/application/common/exceptions'
 
 export const createPermissionMiddleware = () => (roles: User['role'][]) => async (request: FastifyRequest) => {
   if (!request.user) {

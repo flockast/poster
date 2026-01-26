@@ -1,8 +1,8 @@
 import type { UpdateUser, User } from '@/application/entities/user.entity'
 import type { UserRepositoryPort } from '@/application/repositories/user.repository.port'
 import type { PasswordServicePort } from '../../services/password/password.service.port'
-import { normalizeEmail } from '../../utilities/normalize-email.utility'
-import { AppErrorNotFound, AppErrorAlreadyExisting } from '../../exceptions'
+import { normalizeEmail } from '../../common/utilities/normalize-email.utility'
+import { AppErrorNotFound, AppErrorAlreadyExisting } from '../../common/exceptions'
 
 type CreateUserPayload = {
   email: string

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import type { AuthenticationUserServicePort } from '@/application/services/authentication-user/authentication-user.service.port'
 import { type AuthenticationUser, isAuthenticationUser } from '@/application/services/authentication-user/authentication-user.service.types'
 import type { ConfigToken } from '@/application/services/config/config.service.types'
-import { AppErrorUnauthorized } from '@/application/exceptions'
+import { AppErrorUnauthorized } from '@/application/common/exceptions'
 
 export class AuthenticationUserService implements AuthenticationUserServicePort {
   constructor(private readonly config: ConfigToken) {
