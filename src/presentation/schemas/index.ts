@@ -1,4 +1,5 @@
 export * as SchemaCommon from './common.schema'
+export * as SchemaHealth from './health.schema'
 export * as SchemaUser from './user.schema'
 export * as SchemaCategory from './category.schema'
 export * as SchemaTag from './tag.schema'
