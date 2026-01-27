@@ -75,7 +75,7 @@ export class PostRepository implements PostRepositoryPort {
         this.CATEGORY_AGGREGATION,
         this.TAGS_AGGREGATION
       ])
-      .groupBy(['posts.id', 'categories.id'])
+      .groupBy(['posts.id', 'users.id', 'categories.id'])
   }
 
   async findAll(pagination: PaginationRequest, sortBy: SortByRequest<Post>): Promise<PaginationResponse<PostWithRelations>> {
@@ -88,7 +88,6 @@ export class PostRepository implements PostRepositoryPort {
 
     const listQuery = this.buildPostQuery()
       .orderBy(buildSortBy<'posts', Post>(sortBy, 'posts'))
-      .orderBy('created_at', 'asc')
       .offset(pagination.offset)
       .limit(pagination.limit)
       .execute()
