@@ -3,7 +3,7 @@ import autoLoad from '@fastify/autoload'
 import { fastify } from 'fastify'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import { errorHandler } from '@/presentation/handlers/error.handler'
+import { errorHandler } from '@/presentation/common/handlers/error.handler'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
