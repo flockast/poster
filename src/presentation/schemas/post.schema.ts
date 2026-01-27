@@ -26,6 +26,8 @@ export const Item = Type.Composite([
   Type.Object({
     title: Type.String(),
     content: Type.String(),
+    createdAt: Type.String({ format: 'date-time' }),
+    updatedAt: Type.String({ format: 'date-time' }),
     user: SchemaUser.User,
     category: Type.Union([SchemaCategory.Item, Type.Null()]),
     tags: SchemaTag.List
@@ -40,8 +42,7 @@ export const RequestQueryList = Type.Partial(
         Type.Union([
           Type.TemplateLiteral('${id|title|content|createdAt|updatedAt}'),
           Type.TemplateLiteral('${id|title|content|createdAt|updatedAt}.${asc|desc}')
-        ])
-        , { default: ['id.asc'] })
+        ]), { default: ['id.asc'] })
     })
   ])
 )
