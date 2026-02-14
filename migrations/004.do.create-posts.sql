@@ -6,8 +6,8 @@ CREATE TABLE posts (
   status VARCHAR(20) NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published', 'archived')),
   user_id INTEGER NOT NULL REFERENCES users(id),
   category_id INTEGER REFERENCES categories(id) ON DELETE RESTRICT,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_posts_user_id ON posts(user_id);

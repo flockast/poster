@@ -10,8 +10,8 @@ export type Post = {
   title: string
   content: string
   status: string
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
 }
 
 export type CreatePost = {

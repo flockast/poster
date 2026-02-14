@@ -26,8 +26,8 @@ export const Item = Type.Composite([
   Type.Object({
     title: Type.String(),
     content: Type.String(),
-    createdAt: Type.String({ format: 'date-time' }),
-    updatedAt: Type.String({ format: 'date-time' }),
+    createdAt: Type.String(),
+    updatedAt: Type.String(),
     user: SchemaUser.User,
     category: Type.Union([SchemaCategory.Item, Type.Null()]),
     tags: SchemaTag.List

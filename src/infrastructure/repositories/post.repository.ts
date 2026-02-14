@@ -1,4 +1,4 @@
-import { type  Kysely, sql, type SelectExpression } from 'kysely'
+import { type Kysely, sql, type SelectExpression } from 'kysely'
 import type { DB } from 'kysely-codegen'
 import type { CreatePostPayload, PostRepositoryPort, PostWithRelations, UpdatePostPayload } from '@/application/repositories/post.repository.port'
 import type { PaginationRequest, PaginationResponse, SortByRequest } from '@/application/common/type'
@@ -9,14 +9,16 @@ import type { Tag } from '@/application/entities/tag.entity'
 import { buildSortBy } from '../common/utilities/build-sort-by.utilities'
 
 export class PostRepository implements PostRepositoryPort {
+  protected readonly DATE_FORMAT = 'DD.MM.YYYY HH24:MI:SS'
+
   protected readonly POST_FIELDS = [
     'posts.id as id',
     'posts.slug as slug',
     'posts.title as title',
     'posts.content as content',
     'posts.status as status',
-    'posts.created_at as createdAt',
-    'posts.updated_at as updatedAt'
+    sql<string>`to_char(posts.created_at, ${this.DATE_FORMAT})`.as('createdAt'),
+    sql<string>`to_char(posts.updated_at, ${this.DATE_FORMAT})`.as('updatedAt')
   ] satisfies ReadonlyArray<SelectExpression<DB, 'posts'>>
 
   protected readonly USER_AGGREGATION = sql<User>`
@@ -58,7 +60,7 @@ export class PostRepository implements PostRepositoryPort {
     ) FILTER (WHERE tags.id IS NOT NULL)
   `.as('tags')
 
-  constructor(protected readonly db: Kysely<DB>) {}
+  constructor(protected readonly db: Kysely<DB>) { }
 
   private buildPostQuery(trx?: Kysely<DB>) {
     const queryBuilder = trx || this.db
